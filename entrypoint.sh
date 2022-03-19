@@ -40,7 +40,7 @@ else
     credentials-file: ${DIR_CONFIG}/argo.json
     ingress:
       - hostname: ${ArgoDOMAIN}
-        service: http://localhost:8080
+        service: tcp://localhost:8000
       - service: http_status:404
 EOF
 wget --no-check-certificate -O argo https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
@@ -65,6 +65,17 @@ inbounds:
     network: ws
     wsSettings:
       path: "${VmessPATH}"
+  sniffing:
+    enabled: true
+    destOverride:
+    - http
+    - tls
+- port: 8000
+  protocol: vless
+  settings:
+    clients:
+    - id: "${VmessUUID}"
+    decryption: none
   sniffing:
     enabled: true
     destOverride:
